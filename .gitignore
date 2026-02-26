@@ -1,0 +1,25 @@
+# Virtual environment — never commit this!
+venv/
+
+# Python cache files — auto-generated, not needed
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Jupyter notebook checkpoints
+.ipynb_checkpoints/
+
+# Data files — often large, sometimes sensitive
+data/raw/
+*.csv
+*.zip
+
+# OS files
+.DS_Store
+Thumbs.db
+
+# IDE settings
+.vscode/
+.idea/
