@@ -183,3 +183,14 @@ MIT License — free to use, modify, and share.
 - [Stack Overflow](https://stackoverflow.com/) for making the survey data publicly available.
 - [scikit-learn](https://scikit-learn.org/) for the ML tools.
 - [Streamlit](https://streamlit.io/) for making deployment incredibly easy.
+
+## ⚠️ Known Limitations
+
+- **Salaries are in USD without Purchasing Power Parity (PPP) adjustment.**  
+  A $15,000 salary in Morocco represents very different living standards  
+  than $15,000 in the United States. The model may undervalue developers  
+  in countries with lower costs of living.  
+  
+  **Planned improvements:**
+  - v2: Join a PPP index dataset to normalize salaries by country
+  - v3: Train separate models per economic region
