@@ -12,9 +12,16 @@ __pycache__/
 .ipynb_checkpoints/
 
 # Data files — often large, sometimes sensitive
-data/
-*.csv
+# Raw data — large files, never commit
+data/raw/
 *.zip
+
+# Keep these SPECIFIC processed files out of ignore
+# (We need them for deployment!)
+!data/processed/best_model.pkl
+!data/processed/label_encoders.pkl
+!data/processed/survey_engineered.csv
+!data/processed/survey_clean.csv
 
 # OS files
 .DS_Store
