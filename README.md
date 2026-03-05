@@ -25,7 +25,7 @@ This is a real project — not a tutorial dataset. The data is messy. The decisi
 
 ## 🚀 Live Demo
 
-> 🔗 **[Try the app → coming soon]**
+> 🔗 **https://salary-predictor-4tbm7uw7mop4gihuisullj.streamlit.app/**
 
 ---
 
