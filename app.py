@@ -5,8 +5,9 @@ from pathlib import Path
 # Make sure Python can find our src/ module
 sys.path.append(str(Path(__file__).parent))
 
-from src.model import predict_salary
+import requests
 
+API_URL = "https://salary-api-production-fe98.up.railway.app"
 # ─────────────────────────────────────────────
 # PAGE CONFIG — must be the FIRST streamlit call
 # ─────────────────────────────────────────────
@@ -181,38 +182,48 @@ st.divider()
 # PREDICTION BUTTON
 # ─────────────────────────────────────────────
 if st.button("🚀 Predict My Salary!", use_container_width=True, type="primary"):
-
-    with st.spinner("Model is thinking... 🤔"):
+    with st.spinner("Calling the API..."):
         try:
-            salary = predict_salary(
-                country=country,
-                ed_level=ed_level,
-                years_experience=years_experience,
-                employment=employment,
-                dev_type=dev_type,
-                org_size=org_size
+            response = requests.post(
+                f"{API_URL}/predict",
+                json={
+                    "country": country,
+                    "ed_level": ed_level,
+                    "years_experience": years_experience,
+                    "employment": employment,
+                    "dev_type": dev_type,
+                    "org_size": org_size
+                },
+                timeout=30  # wait max 30 seconds
             )
 
-            st.success("✅ Prediction complete!")
+            if response.status_code == 200:
+                data = response.json()
+                salary = data['predicted_salary_usd']
 
-            st.metric(
-                label="💰 Predicted Annual Salary (USD)",
-                value=f"${salary:,.0f}"
-            )
+                st.success("✅ Prediction complete!")
 
-            st.info(f"""
+                st.metric(
+                    label="💰 Predicted Annual Salary (USD)",
+                    value=f"${salary:,.0f}"
+                )
+
+                st.info(f"""
 **What this means:**
-- Our model predicts you'd earn around **${salary:,.0f}/year**
-- Average error: ~$24,659 — real salary likely between \
-${max(0, salary - 24659):,.0f} and ${salary + 24659:,.0f}
-- This is based on 42,000+ real developer responses
-- Remember: if you work for an international company remotely,
-  your actual salary may be significantly higher than this prediction!
-            """)
+- Predicted salary: **${salary:,.0f}/year**
+- Likely range: **${data['lower_bound_usd']:,.0f}** → **${data['upper_bound_usd']:,.0f}**
+- Model average error: ~${data['model_mae_usd']:,.0f}
+- Remember: remote work for international companies
+  may result in significantly higher salaries!
+                """)
 
-        except ValueError as e:
-            st.error(f"Something went wrong: {e}")
-            st.warning("Try selecting different options from the dropdowns.")
+            else:
+                st.error(f"API returned error {response.status_code}: {response.text}")
+
+        except requests.exceptions.Timeout:
+            st.error("Request timed out — the API took too long to respond!")
+        except requests.exceptions.ConnectionError:
+            st.error("Could not connect to the prediction API!")
 
 st.divider()
 
